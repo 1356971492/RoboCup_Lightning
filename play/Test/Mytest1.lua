@@ -19,7 +19,7 @@ firstState = "run1",
 ["run2"] = {
 	switch = function()
 		if bufcnt(player.toTargetDist('Kicker')<10,10) then	
-			return "run2"
+			return "run1"
 		end	
 	end,
 	Kicker = task.goCmuRush(testPos[2],0),
