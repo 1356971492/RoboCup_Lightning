@@ -5,7 +5,7 @@ local testPos  = {
 
 gPlayTable.CreatePlay{
 
-firstState = "run1",
+firstState = "run2",
 
 ["run1"] = {
 	switch = function()
