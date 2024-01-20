@@ -13,9 +13,10 @@ gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
 gTestPlay = "Andy666-Test"
 
 gRoleFixNum = {
-        ["Kicker"]   = {1},
-        ["Goalie"]   = {0},
+        ["Kicker"]   = {},
+        ["Goalie"]   = {},
         ["Tier"]     = {},
+        ["Middle"] = {0}
 }
 
 -- 用来进行定位球的保持
