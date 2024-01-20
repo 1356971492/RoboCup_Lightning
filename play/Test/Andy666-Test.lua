@@ -4,6 +4,8 @@ local testPos  = {
 	CGeoPoint:new_local(0,0),
 	CGeoPoint:new_local(-200,1200),
 	CGeoPoint:new_local(-200,-1200),
+	CGeoPoint:new_local(-2000,0),
+	CGeoPoint:new_local(-1200,0)
 }
 
 gPlayTable.CreatePlay{
@@ -12,36 +14,38 @@ gPlayTable.CreatePlay{
 
 	["run1"] = {
 		switch = function()
-			if bufcnt(true,300) then 
-				print(ball.posX())
+			if bufcnt(true,80) then 
+				-- print(ball.posX())
 				return "run2" 
 			end
 		end,
 		Assister = task.goCmuRush(testPos[3],0),
 		Leader = task.goCmuRush(testPos[3],0), 
-		match = "{AL}"
+		Goalie = task.goCmuRush(testPos[6],0),
+		match = "(ALG)"
 	},
 	["run2"] = {
 	-- 正
 		switch = function()
-			if bufcnt((ball.posX() < 10) and (ball.posX() > -50),10) then 
+			if bufcnt((ball.posX() < 50),10) then 
 				return "run3" 
 			end
 		end,
 		Assister = task.goCmuRush(testPos[1],0),
 		Leader= task.goCmuRush(testPos[2],0), 
-		match = "(AL)"
+		match = "(ALG)"
 	},
 	["run3"] = {
 		-- 负
 			switch = function()
-				if bufcnt((ball.posX() < 50) and (ball.posX() > -10),10) then 
+				if bufcnt((ball.posX() > -50),10) then 
 					return "run2" 
 				end
 			end,
-			Assister = task.goCmuRush(testPos[4],0),
+			Assister = task.goCmuRush(ball.pos(),0),
 			Leader= task.goCmuRush(testPos[5],0), 
-			match = "(AL)"
+			Goalie = task.goCmuRush(testPos[4],0),
+			match = "(ALG)"
 	},
 	
 	name = "Andy666-Test",

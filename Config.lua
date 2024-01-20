@@ -15,8 +15,7 @@ gTestPlay = "Andy666-Test"
 gRoleFixNum = {
         ["Kicker"]   = {},
         ["Goalie"]   = {},
-        ["Tier"]     = {},
-        ["Middle"] = {0}
+        ["Tier"]     = {}
 }
 
 -- 用来进行定位球的保持
