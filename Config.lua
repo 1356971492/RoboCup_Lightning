@@ -13,8 +13,8 @@ gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
 gTestPlay = "Andy666-Test"
 
 gRoleFixNum = {
-        ["Kicker"]   = {},
-        ["Goalie"]   = {},
+        ["Kicker"]   = {1},
+        ["Goalie"]   = {0},
         ["Tier"]     = {},
 }
 
@@ -75,6 +75,7 @@ gBayesPlayTable = {
 
 gTestPlayTable = {
         "Test/TestRun",
+        "Test/Andy666-Test",
         "Test/TestSkill",
         "Test/TestDribbleAndKick",
         "Test/RunMilitaryBoxing",
