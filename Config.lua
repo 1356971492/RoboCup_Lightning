@@ -10,7 +10,7 @@ DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
 
-gTestPlay = "Mytest1"
+gTestPlay = "Andy666-Test"
 
 gRoleFixNum = {
         ["Kicker"]   = {0,1},
