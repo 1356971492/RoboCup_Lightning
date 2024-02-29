@@ -37,23 +37,55 @@ function inter()
 end	
 function marking(x1, x2, y1, y2)
 	local ourGoal = CGeoPoint:new_local(-param.pitchLength/2.0, 0)
-	local num = 0
+	local drawDebug = function()
+		local p1 = CGeoPoint:new_local(x1,y1)
+		local p2 = CGeoPoint:new_local(x1,y2)
+		local p3 = CGeoPoint:new_local(x2,y2)
+		local p4 = CGeoPoint:new_local(x2,y1)
+		debugEngine:gui_debug_line(p1,p2,4)
+		debugEngine:gui_debug_line(p2,p3,4)
+		debugEngine:gui_debug_line(p3,p4,4)
+		debugEngine:gui_debug_line(p4,p1,4)
+	end
 	local checknum = function()
-		for i=0,param.maxPlayer-1 do
-			debugEngine:gui_debug_msg(CGeoPoint:new_local(-1000, 2000 - 200 * (i + 7)),enemy.valid(i) and "True" or "False")
+		drawDebug()
+		local between = function(a, min, max)
+			if a > min and a < max then
+				return true
+			end
+			return false
 		end
+		local num = -1
+		for i=0,param.maxPlayer-1 do
+			if enemy.valid(i) and between(enemy.posX(i), x1, x2) and between(enemy.posY(i), y1, y2) then
+				-- return i
+				num = i
+			-- debugEngine:gui_debug_msg(CGeoPoint:new_local(-1000, 2000 - 200 * (i + 7)),enemy.valid(i) and "True" or "False"
+			end
+		end
+		return num
 	end
 	local ipos = function()
-		checknum()
+		local enemyPos
+		num = checknum()
+		enemyPos = enemy.pos(num)
+		if num < 0 then
+			enemyPos = CGeoPoint:new_local((x1 + x2) / 2.0, (y1 + y2) / 2.0)
+		end
 		local res
-		local l = (ourGoal - enemy.pos(num)):mod() * 0.4
-		res = enemy.pos(num) + Utils.Polar2Vector(l,(ourGoal - enemy.pos(num)):dir())
+		local l = (ourGoal - enemyPos):mod() * 0.4
+		res = enemyPos + Utils.Polar2Vector(l,(ourGoal - enemyPos):dir())
 		return res
 	end
 	local idir = function()
 		local res
-		res = (enemy.pos(num) - ourGoal):dir()
-		--res = 0
+		local enemyPos
+		num = checknum()
+		enemyPos = enemy.pos(num)
+		if num < 0 then
+			enemyPos = CGeoPoint:new_local((x1 + x2) / 2.0, (y1 + y2) / 2.0)
+		end
+		res = (enemyPos - ourGoal):dir()
 		return res
 	end
 	local mexe, mpos = GoCmuRush{pos = ipos, dir = idir, acc = a, flag = f,rec = r,vel = v}
