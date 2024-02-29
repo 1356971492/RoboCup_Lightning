@@ -7,6 +7,58 @@ module(..., package.seeall)
 -- TODO
 ------------------------------------ 跑位相关的skill ---------------------------------------
 --~ p为要走的点,d默认为射门朝向
+function inter()
+	local ipos = function()
+		local res
+		if ball.velMod() < 500 then
+			--str = "22"
+			res = ball.pos() + Utils.Polar2Vector(-100, ball.toTheirGoalDir())
+		else 
+			--str = "33"
+			res = ball.pos() + Utils.Polar2Vector(ball.velMod() * 0.3, ball.vel():dir())
+		end
+		return res
+	end
+	local idir = function(runner)
+		local res
+		local str = "11"
+		if ball.velMod() < 500 then
+			str = "22"
+			res = ball.toTheirGoalDir()
+		else 
+			str = "33"
+			res = (ball.pos() - player.pos(runner)):dir()
+		end
+		debugEngine:gui_debug_msg(CGeoPoint:new_local(0, 0),"debug!"..str)
+		return res
+	end
+	local mexe, mpos = GoCmuRush{pos = ipos, dir = idir, acc = a, flag = f,rec = r,vel = v}
+	return {mexe, mpos}
+end	
+function marking(x1, x2, y1, y2)
+	local ourGoal = CGeoPoint:new_local(-param.pitchLength/2.0, 0)
+	local num = 0
+	local checknum = function()
+		for i=0,param.maxPlayer-1 do
+			debugEngine:gui_debug_msg(CGeoPoint:new_local(-1000, 2000 - 200 * (i + 7)),enemy.valid(i) and "True" or "False")
+		end
+	end
+	local ipos = function()
+		checknum()
+		local res
+		local l = (ourGoal - enemy.pos(num)):mod() * 0.4
+		res = enemy.pos(num) + Utils.Polar2Vector(l,(ourGoal - enemy.pos(num)):dir())
+		return res
+	end
+	local idir = function()
+		local res
+		res = (enemy.pos(num) - ourGoal):dir()
+		--res = 0
+		return res
+	end
+	local mexe, mpos = GoCmuRush{pos = ipos, dir = idir, acc = a, flag = f,rec = r,vel = v}
+	return {mexe, mpos}
+end
 function goalie()
 	local mexe, mpos = Goalie()
 	return {mexe, mpos}
