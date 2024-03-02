@@ -23,11 +23,8 @@ firstState = "run1",
 		-- 	return "run2"
 		-- end	
 	end,
-	Leader = task.goCmuRush(p(1,TOTAL)),
-	Assister = task.goCmuRush(p(2,TOTAL)),
-	Middle = task.goCmuRush(p(3,TOTAL)),
-	Special = task.goCmuRush(p(4,TOTAL)),
-	Defender = task.goCmuRush(p(5,TOTAL)),
+	Leader = task.touchKick(player.pos("Assister"),false),
+	Assister = task.goCmuRush(testPos[1]),
 	match = "{LAMSD}"
 },
 

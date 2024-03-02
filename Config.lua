@@ -9,12 +9,14 @@ IS_RIGHT = CGetSettings("ZAlert/IsRight", "Bool")
 DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
-gTestPlay = "RunMilitaryBoxing"
+gTestPlay = "3V3Test"
 
 gRoleFixNum = {
-        ["Kicker"]   = {0,1,2,3,4,5,6},
-        ["Goalie"]   = {},
+        ["Kicker"]   = {3,4,5,6},
+        ["Goalie"]   = {0},
         ["Tier"]     = {},
+        ["Leader"]   = {1},
+        ["Assister"] = {2},
 }
 
 -- 用来进行定位球的保持
@@ -86,4 +88,5 @@ gTestPlayTable = {
         "Test/EGgoSpeciPos",
         "Test/EGpassball",
         "Test/EGshoot",
+        "Test/3V3Test"
 }
