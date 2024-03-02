@@ -35,6 +35,7 @@ function inter()
 	local mexe, mpos = GoCmuRush{pos = ipos, dir = idir, acc = a, flag = f,rec = r,vel = v}
 	return {mexe, mpos}
 end	
+
 function marking(x1, x2, y1, y2)
 	local ourGoal = CGeoPoint:new_local(-param.pitchLength/2.0, 0)
 	local drawDebug = function()
@@ -91,6 +92,51 @@ function marking(x1, x2, y1, y2)
 	local mexe, mpos = GoCmuRush{pos = ipos, dir = idir, acc = a, flag = f,rec = r,vel = v}
 	return {mexe, mpos}
 end
+
+function attack()
+	local ipos = function(runner)
+		local res
+		res = ball.pos() + Utils.Polar2Vector(-140, ball.toTheirGoalDir())
+		return res
+	end
+	local idir = function(runner)
+		local res
+		res = (ball.pos() - player.pos(runner)):dir()
+		return res
+	end
+	local mexe, mpos = GoCmuRush{pos = ipos, dir = idir, acc = a, flag = f,rec = r,vel = v}
+	return {mexe, mpos}
+end
+
+function waitForAttack()
+	local checkAttacker = function(runner)
+		num = -1
+		 for i = 0, param.maxPlayer - 1 do
+		 	if player.valid(i) and (ball.pos() - player.pos(i)):mod() < 1000 and i ~= runner then
+		 		debugEngine:gui_debug_msg(CGeoPoint:new_local(0,2000),i)
+		 		return i
+		 	end
+		 end
+		 return num
+	end
+	local ipos = function(runner)
+		num = checkAttacker(runner)
+		local res
+		local x = player.posX(num)
+		local y = player.posY(num)
+		res = CGeoPoint:new_local(param.pitchLength / 2.0 - x, -y)
+		return res
+	end
+	local idir = function(runner)
+		num = checkAttacker(runner)
+		local res
+		res = (ball.pos() - player.pos(runner)):dir()
+		return res
+	end
+	local mexe, mpos = GoCmuRush{pos = ipos, dir = idir, acc = a, flag = f,rec = r,vel = v}
+	return {mexe, mpos}
+end
+
 function goalie()
 	local mexe, mpos = Goalie()
 	return {mexe, mpos}
@@ -233,7 +279,13 @@ function openSpeed(vx, vy, vdir)
 	return {mexe, mpos}
 end
 
-function speed(vx, vy, vdir)
+function speed(vx, vy, vdir, f)
+	local ikick = kick.none
+	local idir = dir.specified(0)
+	local ipre = pre.specified(10)
+	local ikp = kp.specified(1000)
+	local icp = cp.specified(1000)
+	local iflag = f or flag.nothing
 	local spdX = function()
 		return vx
 	end
@@ -247,5 +299,5 @@ function speed(vx, vy, vdir)
 	end
 
 	local mexe, mpos = Speed{speedX = spdX, speedY = spdY, speedW = spdW}
-	return {mexe, mpos}
+	return {mexe, mpos, ikick, idir, ipre, ikp, icp, iflag}
 end

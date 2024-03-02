@@ -17,7 +17,7 @@ local JUDGE = {
 		if not ball.valid() then
 			return false
 		end
-		if x > mx or x < -mx or y > my or y < -my then
+		if x > mx / 2.0 or x < -mx / 2.0 or y > my / 2.0 or y < -my / 2.0 then
 			return false
 		end
 		if math.abs(y) < param.penaltyWidth/2 and x > (param.pitchLength/2 - param.penaltyDepth) then
@@ -66,7 +66,7 @@ firstState = "run_to_zero",
 },
 ["try_keep"] = {
 	switch = function()
-		if bufcnt(player.infraredCount("a")>1,100) then
+		if bufcnt(player.infraredCount("a")>1,50) then
 			return "try_kick"
 		end
 		if bufcnt(not JUDGE.BallInField(),5) then
