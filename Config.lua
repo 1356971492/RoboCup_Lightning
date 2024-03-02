@@ -79,5 +79,11 @@ gTestPlayTable = {
         "Test/Mytest3",
         "Test/TestSkill",
         "Test/TestDribbleAndKick",
-        "Test/RunMilitaryBoxing",
+        "Test/EGdirectDribble",
+        "Test/EGdribbleAndGo",
+        "Test/EGGoalie",
+        "Test/EGgoBehindBall",
+        "Test/EGgoSpeciPos",
+        "Test/EGpassball",
+        "Test/EGshoot",
 }
