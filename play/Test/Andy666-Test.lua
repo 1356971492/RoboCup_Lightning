@@ -21,8 +21,8 @@ gPlayTable.CreatePlay{
 		end,
 		Assister = task.goCmuRush(testPos[3],0),
 		Leader = task.goCmuRush(testPos[3],0), 
-		Goalie = task.goCmuRush(testPos[6],0),
-		match = "(ALG)"
+		Kicker = task.goCmuRush(testPos[6],0),
+		match = "{ALK}"
 	},
 	["run2"] = {
 	-- 正
@@ -33,7 +33,7 @@ gPlayTable.CreatePlay{
 		end,
 		Assister = task.goCmuRush(testPos[1],0),
 		Leader= task.goCmuRush(testPos[2],0), 
-		match = "(ALG)"
+		match = "(ALK)"
 	},
 	["run3"] = {
 		-- 负
@@ -44,8 +44,8 @@ gPlayTable.CreatePlay{
 			end,
 			Assister = task.goCmuRush(ball.pos(),0),
 			Leader= task.goCmuRush(testPos[5],0), 
-			Goalie = task.goCmuRush(testPos[4],0),
-			match = "(ALG)"
+			Kicker = task.goCmuRush(testPos[4],0),
+			match = "(ALK)"
 	},
 	
 	name = "Andy666-Test",

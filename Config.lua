@@ -10,7 +10,7 @@ DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
 
-gTestPlay = "Andy666-Test"
+gTestPlay = "Andy666-run"
 
 gRoleFixNum = {
         ["Kicker"]   = {},
@@ -74,8 +74,10 @@ gBayesPlayTable = {
 }
 
 gTestPlayTable = {
+        "Test/Andy666-run",
         "Test/TestRun",
         "Test/Andy666-Test",
+        "Test/Andy666-Test-2",
         "Test/TestSkill",
         "Test/TestDribbleAndKick",
         "Test/RunMilitaryBoxing",
