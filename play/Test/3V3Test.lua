@@ -158,8 +158,8 @@ firstState = "run_to_start",
 			return "run_to_start"
 		end
 	end,
-	Leader = task.goCmuRush(defendEnemyGen(500, 0), _, _, DSS_FLAG),
-	Assister = task.goCmuRush(defendEnemyGen(500, 1),_,_,DSS_FLAG),
+	Leader = task.goCmuRush(defendEnemyGen(500, 1), _, _, DSS_FLAG),
+	Assister = task.goCmuRush(defendEnemyGen(500, 2),_,_,DSS_FLAG),
 	Goalie = task.goalie(),
 	match = "[LA]"
 },

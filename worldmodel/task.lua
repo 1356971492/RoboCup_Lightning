@@ -127,7 +127,7 @@ function waitForAttack()
 		if x > 0 then
 			res = CGeoPoint:new_local(param.pitchLength / 2.0 - x, -y)
 		else
-			res = CGeoPoint:new_local(math.abs(x), -y)
+			res = CGeoPoint:new_local(param.pitchLength / 2.0 - math.abs(x), -y)
 		end
 		return res
 	end
