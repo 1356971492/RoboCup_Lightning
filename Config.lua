@@ -9,14 +9,14 @@ IS_RIGHT = CGetSettings("ZAlert/IsRight", "Bool")
 DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
-gTestPlay = "3V3Test"
+gTestPlay = "testPassBall"
 
 gRoleFixNum = {
-        ["Kicker"]   = {3,4,5,6},
-        ["Goalie"]   = {0},
+        ["a"]   = {0},
+        ["b"]   = {1},
         ["Tier"]     = {},
-        ["Leader"]   = {1},
-        ["Assister"] = {2},
+        ["Leader"]   = {},
+        ["Assister"] = {},
 }
 
 -- 用来进行定位球的保持
@@ -88,5 +88,6 @@ gTestPlayTable = {
         "Test/EGgoSpeciPos",
         "Test/EGpassball",
         "Test/EGshoot",
-        "Test/3V3Test"
+        "Test/3V3Test",
+        "Test/testPassBall"
 }

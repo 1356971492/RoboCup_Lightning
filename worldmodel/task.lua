@@ -1,3 +1,4 @@
+
 module(..., package.seeall)
 
 --~		Play中统一处理的参数（主要是开射门）
@@ -7,6 +8,7 @@ module(..., package.seeall)
 -- TODO
 ------------------------------------ 跑位相关的skill ---------------------------------------
 --~ p为要走的点,d默认为射门朝向
+
 function inter()
 	local ipos = function()
 		local res
