@@ -9,7 +9,7 @@ IS_RIGHT = CGetSettings("ZAlert/IsRight", "Bool")
 DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
-gTestPlay = "testPassBall"
+gTestPlay = "Mytest1"
 
 gRoleFixNum = {
         ["a"]   = {0},
@@ -47,8 +47,10 @@ gRefPlayTable = {
         "Ref/Ref_OurTimeoutV1",
         "Ref/GameStop/Ref_StopV1",
         "Ref/GameStop/Ref_StopV2",
+        "Ref/GameStop/CloudBy_stop",
 -- BallPlacement
-        -- "Ref/BallPlacement/Ref_BallPlace2Stop",
+        "Ref/BallPlacement/Ref_BallPlace2Stop",
+        "Ref/BallPlacement/BY_BallPlace2Stop",
 -- Penalty
         "Ref/PenaltyDef/Ref_PenaltyDefV1",
         "Ref/PenaltyKick/Ref_PenaltyKickV1",
@@ -79,6 +81,7 @@ gTestPlayTable = {
         "Test/Mytest1",
         "Test/Mytest2",
         "Test/Mytest3",
+        "Test/Mytest4",
         "Test/TestSkill",
         "Test/TestDribbleAndKick",
         "Test/EGdirectDribble",

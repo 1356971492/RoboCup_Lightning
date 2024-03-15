@@ -6,4 +6,4 @@
 -- else
 -- 	gCurrentPlay = "Ref_OurBallPlaceV3.2"
 -- end
-gCurrentPlay = "Ref_BallPlace2Stop"
+-- gCurrentPlay = "BY_BallPlace2Stop"
