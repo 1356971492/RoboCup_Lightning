@@ -1,7 +1,8 @@
 local DSS_FLAG = flag.allow_dss + flag.dodge_ball
 -- local placePos = ball.placementPos()
 local testPlacePos = CGeoPoint:new_local(0, 0)
-local PtestPlacePos = function(role)
+
+local PtestPlacePos = function(role) --到放球位置， 已经吸住球后使用
 	local testPlacePos = CGeoPoint:new_local(0, 0)
 	local ballpos = ball.pos()
 	local pos = function()
@@ -35,7 +36,7 @@ local testBallPos2 = function()
 	local pos = ball.pos() + Utils.Polar2Vector(500, (testPlacePos - ball.pos()):dir() + math.pi/2 )
 	return pos
 end
-local pre2placeBall = function()
+local pre2placeBall = function() --到球的位置， 未吸球时使用
 	-- local ballposY = ball.posY()
 	local pos = function()
 		local ballposY = ball.posY()
@@ -64,12 +65,12 @@ firstState = "state0",
 	end,
 	
 	Leader = task.goCmuRush(pre2placeBall(), dir.playerToBall,_,DSS_FLAG),
-	b = task.stop(),
-	c = task.stop(),
-	d = task.stop(),
-	e = task.stop(),
-	f = task.stop(),
-	match = "{Lbcdef}"
+	b      = task.stop(),
+	c      = task.stop(),
+	d      = task.stop(),
+	e      = task.stop(),
+	Goalie = task.goalie(),
+	match  = "{GbcdeL}"
 },
 
 ["state1"] = {--吸球
@@ -86,12 +87,12 @@ firstState = "state0",
 	end,
 
 	Leader = task.goCmuRush(ball.pos(), dir.playerToBall,_,flag.dribbling),
-	b = task.stop(),
-	c = task.stop(),
-	d = task.stop(),
-	e = task.stop(),
-	f = task.stop(),
-	match = "{a}"
+	b      = task.stop(),
+	c      = task.stop(),
+	d      = task.stop(),
+	e      = task.stop(),
+	Goalie = task.goalie(),
+	match  = "{a}"
 },
 ["state2"] = { --转向
 	switch = function()
@@ -104,13 +105,13 @@ firstState = "state0",
 		end
 	end,
 
-	Leader = task.goCmuRush(PtestPlacePos("Leader"), dir.playerToBall,_,flag.dribbling),
-	b = task.stop(),
-	c = task.stop(),
-	d = task.stop(),
-	e = task.stop(),
-	f = task.stop(),
-	match = "{a}"
+	Leader = task.whirl2passBall("Leader", "testPlacePos"),
+	b      = task.stop(),
+	c      = task.stop(),
+	d      = task.stop(),
+	e      = task.stop(),
+	Goalie = task.goalie(),
+	match  = "{a}"
 },
 
 ["state3"] = { --带球移动到目标位置
@@ -119,16 +120,18 @@ firstState = "state0",
 		debugEngine:gui_debug_arc(testPlacePos,500,0,360,1)
 		debugEngine:gui_debug_line(testPlacePos1(),testBallPos1(),1)
 		debugEngine:gui_debug_line(testPlacePos2(),testBallPos2(),1)
-		
+		if bufcnt(player.toBallDist("Leader") > 1000, 10) then
+			return "state0"
+		end
 	end,
 
 	Leader = task.goCmuRush(PtestPlacePos("Leader"), dir.playerToBall,_,flag.dribbling),
-	b = task.stop(),
-	c = task.stop(),
-	d = task.stop(),
-	e = task.stop(),
-	f = task.stop(),
-	match = "{a}"
+	b      = task.stop(),
+	c      = task.stop(),
+	d      = task.stop(),
+	e      = task.stop(),
+	Goalie = task.goalie(),
+	match  = "{a}"
 },
 
 

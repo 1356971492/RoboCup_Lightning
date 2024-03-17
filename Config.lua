@@ -9,7 +9,7 @@ IS_RIGHT = CGetSettings("ZAlert/IsRight", "Bool")
 DEBUG_MATCH = CGetSettings("Debug/RoleMatch","Bool")
 
 gStateFileNameString = string.format(os.date("%Y%m%d%H%M"))
-gTestPlay = "Mytest1"
+gTestPlay = "testPassBall"
 
 gRoleFixNum = {
         ["a"]   = {0},

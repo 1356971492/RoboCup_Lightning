@@ -56,12 +56,14 @@ firstState = "state0",
 },
 ["state2"] = {
 	switch = function()
-		if bufcnt(player.toTargetDist("b") < 50, 10) then
+		if bufcnt(player.toBallDist("b") < 50, 10) then
 			return "state3"
+		elseif bufcnt(player.toBallDist("b") > 1000, 10) then
+			return "state0"
 		end
 	end,
 	a = task.stop,
-	b = task.goCmuRush(ball.pos(),ReceiveBallDir,_,flag.dribbling),
+	b = task.goCmuRush(BeginPos,ReceiveBallDir,_,flag.dribbling),
 	match = "{ab}"
 },
 ["state3"] = {
