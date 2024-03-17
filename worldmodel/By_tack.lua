@@ -32,7 +32,21 @@ function whirl2passBall (role1, role2, whirlSpeed, pre) -- role1: 机器人自�
 		end
 	end
 	local idir = function()
-		
+		return player.dir(role1)
+	end
+	local ikick = function()
+		return 0
+	end
+	local ikp = function()
+		return 0
+	end
+	local icp = function()
+		return 0
+	end
+	local iflag = function()
+		return flag.allow_dss + flag.dribbling
+	end
 
-
+	local mexe, mpos = OpenSpeed{speedX = spdX, speedY = spdY, speedW = spdW} 
+	return {mexe, mpos, ikick, idir, pre.low, ikp, icp, iflag}
 end
