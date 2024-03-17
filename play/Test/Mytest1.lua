@@ -79,7 +79,7 @@ firstState = "state0",
 		debugEngine:gui_debug_line(testPlacePos1(),testBallPos1(),1)
 		debugEngine:gui_debug_line(testPlacePos2(),testBallPos2(),1)
 		if bufcnt(player.infraredCount("Leader")>10, 10) then
-			return "state2"
+			return "state3"
 		-- else
 		-- 	return "state0"
 		end
