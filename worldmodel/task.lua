@@ -21,7 +21,7 @@ function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自�
 	else 
 		iwhirlSpeed = 3
 	end
-	local spdW = function() --旋转速度
+	local spdW = function() --旋转速度大小及方向
 		local PlayerDir = player.dir(role1)
 		local toTargetDir --到目标点的角度
 		if type(role2) == "userdata" then --判断目标是点还是球员
@@ -29,12 +29,13 @@ function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自�
 		else
 			toTargetDir = (player.pos(role2) - player.pos(role1)):dir()
 		end
-		if math.abs(toTargetDir - PlayerDir) < Tpre then
-			if toTargetDir - PlayerDir < 0 then
+		 
+		if math.abs(toTargetDir - PlayerDir) > Tpre then
+			-- if PlayerDir < 0 then
 				return iwhirlSpeed
-			else 
-				return -iwhirlSpeed
-			end
+			-- else 
+				-- return -iwhirlSpeed
+			-- end
 		else
 			return 0
 		end
@@ -48,11 +49,10 @@ function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自�
 	local idir = function()
 		return player.dir(role1)
 	end
-	-- local idir = player.dir(role1)
 	local ikick = function()
 		return 0
 	end
-	local ipre = pre.low()
+	local ipre = pre.low
 	-- local ipre = function()
 	-- 	return pre.low()
 	-- end
@@ -62,11 +62,8 @@ function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自�
 	local icp = function()
 		return 0
 	end
-	local iflag = function()
-		return flag.allow_dss + flag.dribbling
-	end
-
-	local mexe, mpos = OpenSpeed{speedX = spdX, speedY = spdY, speedW = spdW} 
+	local iflag = flag.allow_dss + flag.dribbling
+	local mexe, mpos = Speed{speedX = spdX, speedY = spdY, speedW = spdW} 
 	return {mexe, mpos, ikick, idir, ipre, ikp, icp, iflag}
 end
 
