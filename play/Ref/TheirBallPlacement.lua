@@ -5,4 +5,4 @@
 -- else
 -- 	gCurrentPlay = "Ref_TheirBallPlaceV2"
 -- end
--- gCurrentPlay =  "BY_BallPlace2Stop"
+gCurrentPlay =  "BY_TheirBallPlace"

@@ -18,7 +18,7 @@ gOppoConfig = {
 	FrontDef    = "Ref_FrontDefV1",
 	KickOffDef  = "Ref_KickOffDefV1",
 
-	PenaltyKick = "Ref_PenaltyKickV1",
+	PenaltyKick = "Ref_PenaltyKickV1",--
 	PenaltyDef  = "Ref_PenaltyDefV1",
 	
 	NorPlay     = "NormalPlayV1",

@@ -51,6 +51,7 @@ gRefPlayTable = {
 -- BallPlacement
         "Ref/BallPlacement/Ref_BallPlace2Stop",
         "Ref/BallPlacement/BY_BallPlace2Stop",
+        "Ref/BallPlacement/BY_TheirBallPlace",
 -- Penalty
         "Ref/PenaltyDef/Ref_PenaltyDefV1",
         "Ref/PenaltyKick/Ref_PenaltyKickV1",
@@ -82,6 +83,7 @@ gTestPlayTable = {
         "Test/Mytest2",
         "Test/Mytest3",
         "Test/Mytest4",
+        "Test/Mytest5",
         "Test/TestSkill",
         "Test/TestDribbleAndKick",
         "Test/EGdirectDribble",
@@ -92,5 +94,6 @@ gTestPlayTable = {
         "Test/EGpassball",
         "Test/EGshoot",
         "Test/3V3Test",
-        "Test/testPassBall"
+        "Test/testPassBall",
+        "Test/InitialStand"
 }

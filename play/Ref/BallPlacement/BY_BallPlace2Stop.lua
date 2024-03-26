@@ -1,6 +1,8 @@
 local DSS_FLAG = flag.allow_dss + flag.dodge_ball
 local placePos = ball.placementPos()
+local testPlacePos = CGeoPoint:new_local(1000,-2000)
 local ballpos = ball.pos()
+local ballposY = ball.posY()
 
 
 local BackStandPos  = { -- 后场站位
@@ -21,34 +23,48 @@ local FrontStandPos  = { -- 前场站位
 	CGeoPoint:new_local(3000,-1000),
 	CGeoPoint:new_local(3000,-2100),
 }
-local isLeaveBallPlace = function(role, dist1) 		--判断当前位置是否合法
-	res = function()
+local backPos = function(role)
+	return function()
+		local dist
+		if vision:getNextRefereeMsg() == "OurIndirectKick" then
+			dist = 200
+		else 
+			dist = 620
+		end
+		local ipos = ballpos + Utils.Polar2Vector(dist,(player.pos(role) - ballpos):dir())
+		return ipos
+	end
+end
+local isLeaveBallPlace = function(role, dist1)  		--判断当前位置是否合法
+	-- local playerP = player.pos(role)
+	-- res = function()
 		if dist1 == nil then
 			dist1 = 650
 		end
-		local ans
-		local playerPos = player.pos(role)
-		local ballPos = ball.pos()
-		-- local movePoint = ball.placementPos()
-		local movePoint = placePos 								--测试时使用
-		local seg = CGeoSegment:new_local(ballPos,movePoint)
-		local intersectionP = seg:projection(playerPos)
-		local distance = intersectionP:dist(playerPos)
-		local isPrjon = seg:IsPointOnLineOnSegment(intersectionP)
-		if distance < dist1 and isprjon then 					--距离直线小于dist1 并且投影在线段上
+		local playerP = player.pos(role)
+		local ballP = ball.pos()
+
+		local movePoint = placePos
+
+		local seg = CGeoSegment:new_local(ballP, movePoint)
+		local intersectionP = seg:projection(playerP)
+
+		local distance = intersectionP:dist(playerP)
+		local isprjon = seg:IsPointOnLineOnSegment(intersectionP)
+		if distance < dist1 and isprjon then  				  --距离直线小于dist1 并且投影在线段上
 			return false
-		elseif ballP:dist(playerP) < dist1 then			  --与球的距离小于dist1 
+		elseif ballP:dist(playerP) < dist1 then			    --与球的距离小于dist1 
 			return false
-		elseif movePoint:dist(playerP) < dist1 then 	--与放置点的距离小于dist1
+		elseif movePoint:dist(playerP) < dist1 then 	  --与放置点的距离小于dist1
 			return false
-		else --如果都符合 返回机器人的位置
+		else 																						--如果都符合 返回true
 			return true
 		end
-		return ans
-	end
-	return res
+	-- end
+	-- return res
 end
-local LeaveBallPlacePos = function(role, dist1)   --如果当前位置不合法 需要前往的位置
+
+local LeaveBallPlacePos = function(role, dist1)     --如果当前位置不合法 需要前往的位置
 	-- local tempPoint = player.pos(role)
 	local movePoint = function()
 		local tempPoint = player.pos(role)
@@ -58,7 +74,6 @@ local LeaveBallPlacePos = function(role, dist1)   --如果当前位置不合法 
 		local playerP = player.pos(role)
 		local ballP = ball.pos()
 
-		-- local movePoint = ball.placementPos()
 		local movePoint = placePos
 
 		local seg = CGeoSegment:new_local(ballP, movePoint)
@@ -90,7 +105,7 @@ local LeaveBallPlacePos = function(role, dist1)   --如果当前位置不合法 
 			if tempPoint:x() > 0 then
 				return CGeoPoint:new_local(2000, 2000)
 			else
-				return CGeoPoint:new_local(-2000, 2000)
+				return CGeoPoint:new_local(-2000, 2000) -- BUG中机器人前往的坐标
 			end
 		else
 			return tempPoint
@@ -98,78 +113,27 @@ local LeaveBallPlacePos = function(role, dist1)   --如果当前位置不合法 
 	end
 	return movePoint
 end
-local AstandPos = function()
+local standPos = function(role, num)
+	return function()
 		local ballPlacePos = placePos
 		local ballPlacePosX = placePos:x()
 		local ipos
-		if isLeaveBallPlace("a", 500)  then
+		-- local is = isLeaveBallPlace(1, 500)()
+		-- debugEngine:gui_debug_msg(CGeoPoint:new_local(0,0),tostring(isLeaveBallPlace(role, 500)))
+		if isLeaveBallPlace(role, 500) then
 		-- if 1 > 2  then
 			if ballPlacePosX < -3000 then
-				ipos = BackStandPos[1]
+				ipos = BackStandPos[num]
 			elseif ballPlacePosX > 3000 then
-				ipos = FrontStandPos[1]
+				ipos = FrontStandPos[num]
 			else 
-				ipos = MiddleStandPos[1]
+				ipos = MiddleStandPos[num]
 			end
 		else 
-			-- ipos = LeaveBallPlacePos("a", 500)
-			ipos = LeaveBallPlacePos("a", 500)
+			ipos = LeaveBallPlacePos(role, 500)()
 		end
 		return ipos
-end
-local BstandPos = function()
-		local ballPlacePos = placePos
-		local ballPlacePosX = placePos:x()
-		local ballposY = ball.posY()
-		local ipos
-		if isLeaveBallPlace("b", 500) then
-			if ballPlacePosX < -3000 then
-				ipos = BackStandPos[2]
-			elseif ballPlacePosX > 3000 then
-				ipos = FrontStandPos[2]
-			else 
-				ipos = MiddleStandPos[2]
-			end
-		else 
-			ipos = LeaveBallPlacePos("b", 500)
-		end
-	return ipos
-end
-local CstandPos = function()
-		local ballPlacePos = placePos
-		local ballPlacePosX = placePos:x()
-		local ballposY = ball.posY()
-		local ipos
-		if isLeaveBallPlace("c", 500) then
-			if ballPlacePosX < -3000 then
-				ipos = BackStandPos[3]
-			elseif ballPlacePosX > 3000 then
-				ipos = FrontStandPos[3]
-			else 
-				ipos = MiddleStandPos[3]
-			end
-		else 
-			ipos = LeaveBallPlacePos("c", 500)
-		end
-	return ipos
-end
-local DstandPos = function()
-		local ballPlacePos = placePos
-		local ballPlacePosX = placePos:x()
-		local ballposY = ball.posY()
-		local ipos
-		if isLeaveBallPlace("d", 500) then
-			if ballPlacePosX < -3000 then
-				ipos = BackStandPos[4]
-			elseif ballPlacePosX > 3000 then
-				ipos = FrontStandPos[4]
-			else 
-				ipos = MiddleStandPos[4]
-			end
-		else 
-			ipos = LeaveBallPlacePos("d", 500)
-		end
-	return ipos
+	end
 end
 
 local PtestPlacePos = function(role) --到放球位置， 已经吸住球后使用
@@ -178,6 +142,7 @@ local PtestPlacePos = function(role) --到放球位置， 已经吸住球后使�
 		local idir = (player.pos(role) - ballpos):dir()
 		return placePos + Utils.Polar2Vector(param.playerFrontToCenter, idir)
 	end
+	
 	return pos
 end
 local pre2placeBall = function() --到球的位置， 未吸球时使用
@@ -194,8 +159,7 @@ local pre2placeBall = function() --到球的位置， 未吸球时使用
 end
 
 
-local ballpos = ball.pos()
-local ballposY = ball.posY()
+
 
 local toBallDir = function(role)
 	return (ball.pos() - player.pos(role)):dir()
@@ -226,83 +190,129 @@ gPlayTable.CreatePlay{
 
 firstState = "state0",
 
-["state0"] = {--跑到球的位置
+["state0"] = {--必要的初始化 不然会导致goCmuRush的位置出现问题
 	switch = function()
 		debugEngine:gui_debug_arc(ball.pos(),500,0,360,1)
 		debugEngine:gui_debug_arc(placePos,500,0,360,1)
 		debugEngine:gui_debug_line(testPlacePos1(),testBallPos1(),1)
 		debugEngine:gui_debug_line(testPlacePos2(),testBallPos2(),1)
-		if bufcnt(player.toTargetDist("Leader") < 150, 10) then
+		-- debugEngine:gui_debug_msg(CGeoPoint:new_local(0,0),tostring(isLeaveBallPlace("b", 500)))
+		-- debugEngine:gui_debug_msg(CGeoPoint:new_local(0,2000),tostring(standPos("b",2)():x()).."  "..tostring(standPos("b",2)():y()))
+		if bufcnt(true, 1) then
 			return "state1"
 		end
 	end,
 	
 	Leader = task.goCmuRush(pre2placeBall(), dir.playerToBall,_,DSS_FLAG + flag.our_ball_placement),
-	a      = task.goCmuRush(AstandPos, dir.playerToBall,_,DSS_FLAG),
-	b      = task.goCmuRush(BstandPos, dir.playerToBall,_,DSS_FLAG),
-	c      = task.goCmuRush(CstandPos, dir.playerToBall,_,DSS_FLAG),
-	d      = task.goCmuRush(DstandPos, dir.playerToBall,_,DSS_FLAG),
+	a      = task.goCmuRush(standPos("a",1)(), dir.playerToBall,_,DSS_FLAG),
+	b      = task.goCmuRush(standPos("b",2)(), dir.playerToBall,_,DSS_FLAG),
+	c      = task.goCmuRush(standPos("c",3)(), dir.playerToBall,_,DSS_FLAG),
+	d      = task.goCmuRush(standPos("d",4)(), dir.playerToBall,_,DSS_FLAG),
 	Goalie = task.goalie(),
-	match  = "[LGabcd]"
+	match  = "{LGabcd}"
+},
+["state1"] = {--跑到球的位置
+	switch = function()
+		debugEngine:gui_debug_arc(ball.pos(),500,0,360,1)
+		debugEngine:gui_debug_arc(placePos,500,0,360,1)
+		debugEngine:gui_debug_line(testPlacePos1(),testBallPos1(),1)
+		debugEngine:gui_debug_line(testPlacePos2(),testBallPos2(),1)
+		-- debugEngine:gui_debug_msg(CGeoPoint:new_local(0,0),tostring(isLeaveBallPlace("b", 500)))
+		-- debugEngine:gui_debug_msg(CGeoPoint:new_local(0,2000),tostring(standPos("b",2)():x()).."  "..tostring(standPos("b",2)():y()))
+		if bufcnt(player.toTargetDist("Leader") < 150, 10) then
+			return "state2"
+		end
+	end,
+	
+	Leader = task.goCmuRush(pre2placeBall(), dir.playerToBall,_,DSS_FLAG + flag.our_ball_placement),
+	a      = task.goCmuRush(standPos("a",1), dir.playerToBall,_,DSS_FLAG),
+	b      = task.goCmuRush(standPos("b",2), dir.playerToBall,_,DSS_FLAG),
+	c      = task.goCmuRush(standPos("c",3), dir.playerToBall,_,DSS_FLAG),
+	d      = task.goCmuRush(standPos("d",4), dir.playerToBall,_,DSS_FLAG),
+	Goalie = task.goalie(),
+	match  = "{LGabcd}"
 },
 
-["state1"] = {--吸球
+["state2"] = {--吸球
 	switch = function()
 		debugEngine:gui_debug_arc(ball.pos(),500,0,360,1)
 		debugEngine:gui_debug_arc(placePos,500,0,360,1)
 		debugEngine:gui_debug_line(testPlacePos1(),testBallPos1(),1)
 		debugEngine:gui_debug_line(testPlacePos2(),testBallPos2(),1)
 		if bufcnt(player.infraredCount("Leader")>10, 10) then
-			return "state2"
-		-- else
-		-- 	return "state0"
+			return "state3"
+		elseif bufcnt(player.toBallDist("Leader") > 500, 10) then
+			return "state1"
 		end
 	end,
 
 	Leader = task.goCmuRush(ball.pos(), dir.playerToBall,_,flag.dribbling + flag.our_ball_placement),
-	a      = task.goCmuRush(AstandPos, dir.playerToBall,_,DSS_FLAG),
-	b      = task.goCmuRush(BstandPos, dir.playerToBall,_,DSS_FLAG),
-	c      = task.goCmuRush(CstandPos, dir.playerToBall,_,DSS_FLAG),
-	d      = task.goCmuRush(DstandPos, dir.playerToBall,_,DSS_FLAG),
+	a      = task.goCmuRush(standPos("a",1), dir.playerToBall,_,DSS_FLAG),
+	b      = task.goCmuRush(standPos("b",2), dir.playerToBall,_,DSS_FLAG),
+	c      = task.goCmuRush(standPos("c",3), dir.playerToBall,_,DSS_FLAG),
+	d      = task.goCmuRush(standPos("d",4), dir.playerToBall,_,DSS_FLAG),
 	Goalie = task.goalie(),
 	match  = "{a}"
 },
-["state2"] = { --转向
+["state3"] = { --转向
 	switch = function()
 		debugEngine:gui_debug_arc(ball.pos(),500,0,360,1)
 		debugEngine:gui_debug_arc(placePos,500,0,360,1)
 		debugEngine:gui_debug_line(testPlacePos1(),testBallPos1(),1)
 		debugEngine:gui_debug_line(testPlacePos2(),testBallPos2(),1)
 		if  math.abs((placePos - player.pos("Leader")):dir() - player.dir("Leader"))  < 0.04 then
-			return "state3"
+			return "state4"
 		end
 	end,
 
 	Leader = task.whirl2passBall("Leader", placePos),
-	a      = task.goCmuRush(AstandPos, dir.playerToBall,_,DSS_FLAG),
-	b      = task.goCmuRush(BstandPos, dir.playerToBall,_,DSS_FLAG),
-	c      = task.goCmuRush(CstandPos, dir.playerToBall,_,DSS_FLAG),
-	d      = task.goCmuRush(DstandPos, dir.playerToBall,_,DSS_FLAG),
+	a      = task.goCmuRush(standPos("a",1), dir.playerToBall,_,DSS_FLAG),
+	b      = task.goCmuRush(standPos("b",2), dir.playerToBall,_,DSS_FLAG),
+	c      = task.goCmuRush(standPos("c",3), dir.playerToBall,_,DSS_FLAG),
+	d      = task.goCmuRush(standPos("d",4), dir.playerToBall,_,DSS_FLAG),
 	Goalie = task.goalie(),
 	match  = "{a}"
 },
 
-["state3"] = { --带球移动到目标位置
+["state4"] = { --带球移动到目标位置
 	switch = function()
 		debugEngine:gui_debug_arc(ball.pos(),500,0,360,1)
 		debugEngine:gui_debug_arc(placePos,500,0,360,1)
 		debugEngine:gui_debug_line(testPlacePos1(),testBallPos1(),1)
 		debugEngine:gui_debug_line(testPlacePos2(),testBallPos2(),1)
-		if bufcnt(player.toBallDist("Leader") > 1000, 10) then
-			return "state0"
+		if bufcnt(player.toTargetDist("Leader") < 100, 100) then
+			return "state5"
+		elseif bufcnt(player.toBallDist("Leader") > 500, 10) then
+			return "state1"
 		end
 	end,
 
-	Leader = task.goCmuRush(PtestPlacePos("Leader"), toBallPlacePosDir,_,flag.dribbling + flag.our_ball_placement),
-	a      = task.goCmuRush(AstandPos, dir.playerToBall,_,DSS_FLAG),
-	b      = task.goCmuRush(BstandPos, dir.playerToBall,_,DSS_FLAG),
-	c      = task.goCmuRush(CstandPos, dir.playerToBall,_,DSS_FLAG),
-	d      = task.goCmuRush(DstandPos, dir.playerToBall,_,DSS_FLAG),
+	Leader = task.goCmuRush(PtestPlacePos("Leader"), player.toTargetDir(placePos, "Leader"),_,flag.dribbling + flag.our_ball_placement),
+	a      = task.goCmuRush(standPos("a",1), dir.playerToBall,_,DSS_FLAG),
+	b      = task.goCmuRush(standPos("b",2), dir.playerToBall,_,DSS_FLAG),
+	c      = task.goCmuRush(standPos("c",3), dir.playerToBall,_,DSS_FLAG),
+	d      = task.goCmuRush(standPos("d",4), dir.playerToBall,_,DSS_FLAG),
+	Goalie = task.goalie(),
+	match  = "{a}"
+},
+["state5"] = { --退后
+	switch = function()
+		debugEngine:gui_debug_arc(ball.pos(),500,0,360,1)
+		debugEngine:gui_debug_arc(placePos,500,0,360,1)
+		debugEngine:gui_debug_line(testPlacePos1(),testBallPos1(),1)
+		debugEngine:gui_debug_line(testPlacePos2(),testBallPos2(),1)
+		if bufcnt (cond.ourBallPlace() and ballpos:dist(placePos) > 100, 100) then
+			return "state1"
+		elseif cond.isGameOn() then
+			return "finish"
+		end
+	end,
+
+	Leader = task.goCmuRush(backPos("Leader"), player.toTargetDir(placePos, "Leader"),_,flag.our_ball_placement),
+	a      = task.goCmuRush(standPos("a",1), dir.playerToBall,_,DSS_FLAG),
+	b      = task.goCmuRush(standPos("b",2), dir.playerToBall,_,DSS_FLAG),
+	c      = task.goCmuRush(standPos("c",3), dir.playerToBall,_,DSS_FLAG),
+	d      = task.goCmuRush(standPos("d",4), dir.playerToBall,_,DSS_FLAG),
 	Goalie = task.goalie(),
 	match  = "{a}"
 },

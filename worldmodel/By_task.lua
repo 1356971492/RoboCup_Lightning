@@ -1,5 +1,3 @@
-module(..., package.seeall)
-
 function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自身 role2: 旋转目标机器人或点 whrlSpeed: 旋转速度 pre: 旋转精度
 	local Tpre
 	local iwhirlSpeed
@@ -21,12 +19,13 @@ function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自�
 		else
 			toTargetDir = (player.pos(role2) - player.pos(role1)):dir()
 		end
-		if math.abs(toTargetDir - PlayerDir) < Tpre then
-			if toTargetDir - PlayerDir < 0 then
+		 
+		if math.abs(toTargetDir - PlayerDir) > Tpre then
+			-- if PlayerDir < 0 then
 				return iwhirlSpeed
-			else 
-				return -iwhirlSpeed
-			end
+			-- else 
+				-- return -iwhirlSpeed
+			-- end
 		else
 			return 0
 		end
@@ -40,7 +39,6 @@ function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自�
 	local idir = function()
 		return player.dir(role1)
 	end
-	-- local idir = player.dir(role1)
 	local ikick = function()
 		return 0
 	end
@@ -54,23 +52,7 @@ function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自�
 	local icp = function()
 		return 0
 	end
-	local iflag = function()
-		return flag.allow_dss + flag.dribbling
-	end
-
-	local mexe, mpos = OpenSpeed{speedX = spdX, speedY = spdY, speedW = spdW} 
+	local iflag = flag.allow_dss + flag.dribbling
+	local mexe, mpos = Speed{speedX = spdX, speedY = spdY, speedW = spdW} 
 	return {mexe, mpos, ikick, idir, ipre, ikp, icp, iflag}
-end
-
-function Run2ReceiveBall (role1, role2, speed)
-	local ispeed
-	if speed ~= nil then
-		ispeed = speed
-	else 
-		ispeed = 500
-	end
-	
-
-
-
 end

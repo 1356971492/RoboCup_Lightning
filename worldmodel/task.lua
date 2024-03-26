@@ -23,19 +23,33 @@ function whirl2passBall (role1, role2, whirlSpeed, pre1) -- role1: 机器人自�
 	end
 	local spdW = function() --旋转速度大小及方向
 		local PlayerDir = player.dir(role1)
+		if PlayerDir < 0 then 
+			PlayerDir = PlayerDir + 2 * math.pi
+		end
 		local toTargetDir --到目标点的角度
+
 		if type(role2) == "userdata" then --判断目标是点还是球员
 			toTargetDir = (role2 - player.pos(role1)):dir()
 		else
 			toTargetDir = (player.pos(role2) - player.pos(role1)):dir()
 		end
-		 
+		 if toTargetDir < 0 then 
+			toTargetDir = toTargetDir + 2 * math.pi
+		end
 		if math.abs(toTargetDir - PlayerDir) > Tpre then
-			-- if PlayerDir < 0 then
-				return iwhirlSpeed
-			-- else 
-				-- return -iwhirlSpeed
-			-- end
+			if PlayerDir > toTargetDir then
+				if PlayerDir - toTargetDir > math.pi then
+					return iwhirlSpeed
+				else 
+					return -iwhirlSpeed
+				end
+			else 
+				if toTargetDir - PlayerDir > math.pi then
+					return -iwhirlSpeed
+				else 
+					return iwhirlSpeed
+				end
+			end
 		else
 			return 0
 		end
